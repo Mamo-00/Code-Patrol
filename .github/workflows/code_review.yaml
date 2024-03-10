@@ -1,0 +1,15 @@
+name: Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run analysis script
+      run: echo "Placeholder for running analysis script"
+    - name: Post feedback
+      run: echo "Placeholder for posting feedback"
