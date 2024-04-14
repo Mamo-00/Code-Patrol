@@ -1,15 +1,38 @@
-name: Code Review
+name: AI Code Review
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  review:
+  code_review:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PR_NUMBER: ${{ github.event.number }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Run analysis script
-      run: echo "Placeholder for running analysis script"
-    - name: Post feedback
-      run: echo "Placeholder for posting feedback"
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+      
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip
+             pip install -r requirements.txt
+      
+      - name: Perform static analysis
+        run: python src/analysis/static_analysis.py
+
+      - name: Run analysis
+        run: python src/analysis/code_review.py
+
+      - name: Post feedback to GitHub
+        run: python src/GitHub/post_feedback.py
+
+      - name: Get Pull Request Details
+        run: python src/GitHub/github_interaction.py
