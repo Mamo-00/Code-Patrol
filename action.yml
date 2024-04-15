@@ -23,18 +23,32 @@ runs:
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
+      shell: bash
 
     - name: Perform Static Analysis
       run: python src/analysis/static_analysis.py
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
 
     - name: Run Analysis
       run: python src/analysis/code_review.py
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
 
     - name: Post Feedback to GitHub
       run: python src/github/post_feedback.py
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
 
     - name: Get Pull Request Details
       run: python src/github/github_interaction.py
-  env:
-    GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-    OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
