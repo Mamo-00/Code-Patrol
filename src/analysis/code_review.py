@@ -1,9 +1,7 @@
 import os
 import sys
 import openai
-from typing import List, Optional
-from src.utils.common_utils import (validate_filename, extract_filenames_from_diff_text,
-                                format_file_contents_as_markdown)
+from src.utils.common_utils import (extract_filenames_from_diff_text)
 from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
 
 
@@ -11,7 +9,7 @@ from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES
 from utils.settings import STYLES, PERSONAS, REQUEST
 
 # Generate prompt for LLM
-def get_prompt(diff, persona, style, include_files, filenames=None):
+def get_prompt(diff, persona, style):
     style_description = STYLES.get(style, "Default style description.")
     prompt = f"**{persona}: {style_description}**\n\n{REQUEST}\n\n```diff\n{diff}\n```"
     return prompt
@@ -38,7 +36,7 @@ def main():
             temperature=TEMPERATURE, stop=None, api_key=api_key
         )
         review_text = response.get("choices")[0].get("text", "").strip()
-        return review_text  # Instead of print, return the text for easier testing
+        return review_text  
     except Exception as e:
         return f"Failed to generate review due to an error: {e}"
 
