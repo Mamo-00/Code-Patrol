@@ -1,0 +1,37 @@
+name: 'AI Code Review'
+description: 'Automate code reviews using AI.'
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub token for authentication.'
+    required: true
+  OPENAI_API_KEY:
+    description: 'OpenAI API key for AI responses.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
+
+    - name: Perform Static Analysis
+      run: python src/analysis/static_analysis.py
+
+    - name: Run Analysis
+      run: python src/analysis/code_review.py
+
+    - name: Post Feedback to GitHub
+      run: python src/github/post_feedback.py
+
+    - name: Get Pull Request Details
+      run: python src/github/github_interaction.py
+    env:
+      GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}

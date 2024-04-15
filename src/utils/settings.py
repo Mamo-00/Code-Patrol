@@ -1,4 +1,4 @@
-# API keys (Ensure these are set in your environment or use a secure method to load them)
+# API keys 
 API_KEY_NAMES = {
     "openai": "OPENAI_API_KEY",  # Name of the environment variable where the OpenAI key is stored
     "github": "GITHUB_TOKEN"
