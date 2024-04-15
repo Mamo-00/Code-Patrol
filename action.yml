@@ -7,11 +7,9 @@ inputs:
   OPENAI_API_KEY:
     description: 'OpenAI API key for AI responses.'
     required: true
+
 runs:
   using: 'composite'
-  env:
-      GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-      OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
   steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -22,7 +20,9 @@ runs:
         python-version: '3.12'
 
     - name: Install Dependencies
-      run: pip install -r requirements.txt
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Perform Static Analysis
       run: python src/analysis/static_analysis.py
@@ -35,4 +35,6 @@ runs:
 
     - name: Get Pull Request Details
       run: python src/github/github_interaction.py
-    
+  env:
+    GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
