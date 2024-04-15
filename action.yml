@@ -9,6 +9,9 @@ inputs:
     required: true
 runs:
   using: 'composite'
+  env:
+      GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
   steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -32,6 +35,4 @@ runs:
 
     - name: Get Pull Request Details
       run: python src/github/github_interaction.py
-    env:
-      GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-      OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+    
