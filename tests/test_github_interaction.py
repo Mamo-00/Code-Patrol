@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from src.github.github_interaction import get_pull_request_details
+from github.github_interaction import get_pull_request_details
 
-@patch('src.github.github_interaction.Github')
-@patch('src.github.github_interaction.os.getenv')
+@patch('github.github_interaction.Github')
+@patch('github.github_interaction.os.getenv')
 def test_get_pull_request_details(mock_getenv, mock_github):
     # Configure the mock environment variables
     mock_getenv.side_effect = lambda k: {

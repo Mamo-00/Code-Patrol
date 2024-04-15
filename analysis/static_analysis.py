@@ -35,8 +35,8 @@ def run_pylint(target_files):
     return issues
 
 def main():
-    flake8_issues = run_flake8('src/')
-    pylint_issues = run_pylint(['src/analysis/code_review.py', 'src/GitHub/post_feedback.py'])
+    flake8_issues = run_flake8('./')
+    pylint_issues = run_pylint(['./analysis/code_review.py', './GitHub/post_feedback.py'])
 
     # Print results or handle them further as needed
     print("Flake8 Issues:", json.dumps(flake8_issues, indent=4))

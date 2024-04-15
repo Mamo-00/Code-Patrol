@@ -26,13 +26,13 @@ jobs:
              pip install -r requirements.txt
       
       - name: Perform static analysis
-        run: python src/analysis/static_analysis.py
+        run: python ./analysis/static_analysis.py
 
       - name: Run analysis
-        run: python src/analysis/code_review.py
+        run: python ./analysis/code_review.py
 
       - name: Post feedback to GitHub
-        run: python src/GitHub/post_feedback.py
+        run: python ./GitHub/post_feedback.py
 
       - name: Get Pull Request Details
-        run: python src/GitHub/github_interaction.py
+        run: python ./GitHub/github_interaction.py

@@ -1,7 +1,7 @@
 import os
 import sys
 import openai
-from src.utils.common_utils import (extract_filenames_from_diff_text)
+from utils.common_utils import (extract_filenames_from_diff_text)
 from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
 
 
