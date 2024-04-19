@@ -4,8 +4,8 @@ inputs:
   GITHUB_TOKEN:
     description: 'GitHub token for authentication.'
     required: true
-  OPENAI_API_KEY:
-    description: 'OpenAI API key for AI responses.'
+  LLAMA_API_KEY:
+    description: 'Llama API key for AI responses.'
     required: true
 
 runs:
@@ -22,28 +22,26 @@ runs:
     - name: Install Dependencies
       run: |
         pip install --upgrade pip
-        pip install -r ${{ github.action_path }}/requirements.txt
+        pip install -r ${{ github.workspace }}/requirements.txt
       shell: bash
 
     - name: Perform Static Analysis
-      run: python ${{ github.action_path }}/analysis/static_analysis.py
+      run: python ${{ github.workspace }}/analysis/static_analysis.py
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
-
-    
+        LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
 
     - name: Post Feedback to GitHub
-      run: python ${{ github.action_path }}/github/post_feedback.py
+      run: python ${{ github.workspace }}/github/post_feedback.py
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+        LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
 
     - name: Get Pull Request Details
-      run: python ${{ github.action_path }}/github/github_interaction.py
+      run: python ${{ github.workspace }}/github/github_interaction.py
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
+        LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
