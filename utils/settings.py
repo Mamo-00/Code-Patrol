@@ -1,11 +1,11 @@
-# API keys 
+# API keys
 API_KEY_NAMES = {
-    "openai": "OPENAI_API_KEY",  # Name of the environment variable where the OpenAI key is stored
+    "llama": "LLAMA_API_KEY",  # Name of the environment variable where the Llama API key is stored
     "github": "GITHUB_TOKEN"
 }
 
 # Model and API usage settings
-MODEL = "gpt-4-turbo"
+MODEL = "llama-2"  # Assuming you're using a model like llama-2, adjust based on actual available models
 TEMPERATURE = 0.1
 MAX_TOKENS = 7000
 

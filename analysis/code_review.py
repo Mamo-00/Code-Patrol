@@ -1,23 +1,16 @@
 import os
 import sys
-import openai
-from utils.common_utils import (extract_filenames_from_diff_text)
+import requests  # Use requests to handle HTTP requests to the Llama API
+from utils.common_utils import extract_filenames_from_diff_text
 from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
 
-
-# Load styles and personas from settings
-from utils.settings import STYLES, PERSONAS, REQUEST
-
-# Generate prompt for LLM
 def get_prompt(diff, persona, style):
     style_description = STYLES.get(style, "Default style description.")
     prompt = f"**{persona}: {style_description}**\n\n{REQUEST}\n\n```diff\n{diff}\n```"
     return prompt
 
-
-# Main execution function
 def main():
-    api_to_use = os.getenv("API_TO_USE", "openai")
+    api_to_use = os.getenv("API_KEY_NAMES", "llama")
     persona = PERSONAS.get(os.getenv("PERSONA", "developer"))
     style = STYLES.get(os.getenv("STYLE", "detailed"))
     include_files = os.getenv("INCLUDE_FILES", "false").lower() == "true"
@@ -28,19 +21,26 @@ def main():
 
     diff = sys.stdin.read()
     filenames = extract_filenames_from_diff_text(diff) if include_files else []
-    prompt = get_prompt(diff, persona, style, include_files, filenames)
+    prompt = get_prompt(diff, persona, style)
+
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    data = {
+        "model": MODEL,
+        "prompt": prompt,
+        "max_tokens": MAX_TOKENS,
+        "temperature": TEMPERATURE
+    }
 
     try:
-        response = openai.Completion.create(
-            engine=MODEL, prompt=prompt, max_tokens=MAX_TOKENS,
-            temperature=TEMPERATURE, stop=None, api_key=api_key
-        )
-        review_text = response.get("choices")[0].get("text", "").strip()
-        return review_text  
+        response = requests.post('https://api.llama-api.com/v1/completions', json=data, headers=headers)
+        response_json = response.json()
+        review_text = response_json.get('choices', [{}])[0].get('text', '').strip()
+        return review_text
     except Exception as e:
         return f"Failed to generate review due to an error: {e}"
 
-# If __name__ == "__main__":, call the function and print its output
 if __name__ == "__main__":
     print(main())
-
