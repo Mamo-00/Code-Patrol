@@ -47,4 +47,3 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
-
