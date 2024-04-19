@@ -10,7 +10,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_REPOSITORY: ${{ github.repository }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      LLAMA_API_KEY: ${{ secrets.LLAMA_API_KEY }}
       PR_NUMBER: ${{ github.event.number }}
     steps:
       - name: Checkout repo
