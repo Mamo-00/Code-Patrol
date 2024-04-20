@@ -29,10 +29,10 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
     - name: Upload Review Results as Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: review-results
-        path: review_results.txt
+        path: ${{ github.workspace }}/review_results.txt
     - name: Post Feedback to GitHub
       run: python ${{ github.action_path }}/github/post_feedback.py
       shell: bash
