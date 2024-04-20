@@ -1,7 +1,9 @@
-import os
-import sys
 import requests  # Use requests to handle HTTP requests to the Llama API
-from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils')))
+from settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
+
 
 def get_prompt(diff, persona, style):
     style_description = STYLES.get(style, "Default style description.")
