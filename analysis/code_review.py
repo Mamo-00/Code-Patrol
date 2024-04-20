@@ -35,10 +35,9 @@ def get_prompt(diff, persona, style):
     return prompt
 
 def main():
-    api_key = os.getenv("LLAMA_API_KEY", "llama")
+    api_key = os.getenv("LLAMA_API_KEY")
     persona = PERSONAS.get(os.getenv("PERSONA", "developer"))
     style = STYLES.get(os.getenv("STYLE", "detailed"))
-
     diff = sys.stdin.read()
     prompt = get_prompt(diff, persona, style)
 
@@ -57,9 +56,13 @@ def main():
         response = requests.post('https://api.llama-api.com/v1/completions', json=data, headers=headers)
         response_json = response.json()
         review_text = response_json.get('choices', [{}])[0].get('text', '').strip()
-        return review_text
+
+        # Write to a file and ensure it's in the correct directory
+        with open('review_results.txt', 'w') as file:
+            file.write(review_text)
+        print("Review results written to review_results.txt")
     except Exception as e:
-        return f"Failed to generate review due to an error: {e}"
+        print(f"Failed to generate review due to an error: {e}")
 
 if __name__ == "__main__":
-    print(main())
+    main()
