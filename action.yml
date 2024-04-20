@@ -25,13 +25,6 @@ runs:
         pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
 
-    - name: Perform Static Analysis
-      run: python ${{ github.action_path }}/analysis/static_analysis.py
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
-
     - name: Post Feedback to GitHub
       run: python ${{ github.action_path }}/github/post_feedback.py
       shell: bash
