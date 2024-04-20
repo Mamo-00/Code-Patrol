@@ -1,4 +1,6 @@
 import os
+import sys
+
 from github import Github
 
 def post_comment_to_pr(comment_body):
@@ -16,9 +18,12 @@ def post_comment_to_pr(comment_body):
     pr = repo.get_pull(pr_number)
     pr.create_issue_comment(comment_body)
 
-def main():
-    comment_body = "Your automated feedback here."
+
+def main(comment_body):
     post_comment_to_pr(comment_body)
 
 if __name__ == '__main__':
-    main()
+    # Expects the review text as the first command line argument
+    comment_body = sys.argv[1] if len(sys.argv) > 1 else "Default comment"
+    main(comment_body)
+

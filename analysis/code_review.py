@@ -6,7 +6,7 @@ from settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERS
 
 
 def get_prompt(diff, persona, style):
-    style_description = STYLES.get(style, "Default style description.")
+    style_description = STYLES.get(style, "detailed")
     prompt = f"**{persona}: {style_description}**\n\n{REQUEST}\n\n```diff\n{diff}\n```"
     return prompt
 
@@ -14,7 +14,6 @@ def main():
     api_to_use = os.getenv("API_KEY_NAMES", "llama")
     persona = PERSONAS.get(os.getenv("PERSONA", "developer"))
     style = STYLES.get(os.getenv("STYLE", "detailed"))
-    include_files = os.getenv("INCLUDE_FILES", "false").lower() == "true"
 
     api_key = os.getenv(API_KEY_NAMES[api_to_use])
     if not api_key:
