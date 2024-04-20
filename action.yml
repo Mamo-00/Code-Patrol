@@ -32,7 +32,7 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: review-results
-        path: ${{ github.workspace }}/review_results.txt
+        path: review_results.txt
     - name: Post Feedback to GitHub
       run: python ${{ github.action_path }}/github/post_feedback.py
       shell: bash
