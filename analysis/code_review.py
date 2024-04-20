@@ -1,7 +1,6 @@
 import os
 import sys
 import requests  # Use requests to handle HTTP requests to the Llama API
-from utils.common_utils import extract_filenames_from_diff_text
 from utils.settings import API_KEY_NAMES, MODEL, TEMPERATURE, MAX_TOKENS, STYLES, PERSONAS, REQUEST
 
 def get_prompt(diff, persona, style):
@@ -20,7 +19,6 @@ def main():
         return "API key for {} is not set.".format(api_to_use)
 
     diff = sys.stdin.read()
-    filenames = extract_filenames_from_diff_text(diff) if include_files else []
     prompt = get_prompt(diff, persona, style)
 
     headers = {
