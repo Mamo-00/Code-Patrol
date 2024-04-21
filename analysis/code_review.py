@@ -14,7 +14,7 @@ def fetch_pr_diff(repo, pr_number, token):
         print(f"Failed to fetch PR diff: {response.status_code} {response.text}")
         return None
 
-REQUEST = "Please provide a detailed review of the following code changes, focusing on improvements for clarity, efficiency, and maintainability."
+REQUEST = "Please provide a detailed review of the provided code changes by analysing the diff and focus on improvements for clarity, efficiency, and maintainability."
 
 def get_prompt(diff):
     return [{
@@ -22,7 +22,7 @@ def get_prompt(diff):
         "content": REQUEST
     }, {
         "role": "user",
-        "content": f"Here are some recent code changes:\n\n```diff\n{diff}\n```"
+        "content": f"Here are some recent code changes that I need you to analyse and give me improvements on:\n\n```diff\n{diff}\n```"
     }]
 
 def main():
