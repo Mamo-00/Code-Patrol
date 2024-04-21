@@ -21,7 +21,6 @@ Explain why these issues might be problematic, suggest better coding practices,
 and provide alternative solutions if applicable. Include specific examples or suggestions wherever possible.
 """
 
-
 def get_prompt(diff):
     return [{
         "role": "system",
