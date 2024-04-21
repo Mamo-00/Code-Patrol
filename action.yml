@@ -39,8 +39,8 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        LLAMA_API_KEY: ${{ inputs.LLAMA_API_KEY }}
-        PR_NUMBER: ${{ github.event.pull_request.number }}
+        GITHUB_REPOSITORY: ${{ github.repository }} 
+        PR_NUMBER: ${{ github.event.pull_request.number }} 
     - name: Get Pull Request Details
       run: python ${{ github.action_path }}/github/github_interaction.py
       shell: bash
