@@ -14,21 +14,15 @@ def fetch_pr_diff(repo, pr_number, token):
         print(f"Failed to fetch PR diff: {response.status_code} {response.text}")
         return None
 
-REQUEST = """
-Please provide a thorough and detailed review of the following code changes. 
-Focus on identifying any issues with clarity, efficiency, and maintainability. 
-Explain why these issues might be problematic, suggest better coding practices, 
-and provide alternative solutions if applicable. Include specific examples or suggestions wherever possible.
-"""
-
 def get_prompt(diff):
     return [{
         "role": "system",
-        "content": REQUEST
+        "content": "Please review the following code changes for any syntax errors, logical errors, or potential improvements. Focus on the specific lines changed."
     }, {
         "role": "user",
-        "content": f"Here are some recent code changes:\n\n```diff\n{diff}\n```"
+        "content": f"Code changes:\n\n```diff\n{diff}\n```"
     }]
+
 
 def main():
     repo = os.getenv("GITHUB_REPOSITORY")
