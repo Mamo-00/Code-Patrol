@@ -1,69 +1,63 @@
-import requests  # Use requests to handle HTTP requests to the Llama API
 import sys
 import os
+from llamaapi import LlamaAPI
 
-# API keys
-API_KEY_NAMES = {
-    "llama": "LLAMA_API_KEY",  # Name of the environment variable where the Llama API key is stored
-    "github": "GITHUB_TOKEN"
-}
+LLAMA_API_KEY = os.getenv("LLAMA_API_KEY")
+if not LLAMA_API_KEY:
+    print("LLAMA_API_KEY is not set.")
+    sys.exit(1)
 
-# Model and API usage settings
-MODEL = "llama-2"  # Assuming you're using a model like llama-2, adjust based on actual available models
-TEMPERATURE = 0.1
+llama = LlamaAPI(LLAMA_API_KEY)
+
+
+MODEL = "mistral-7b"
+TEMPERATURE = 0.5  # Try varying this to see different outputs
 MAX_TOKENS = 7000
-
-# Request templates and styles for LLM prompts
-REQUEST = "Please provide detailed, constructive feedback on the code below. Focus on improving clarity, efficiency, and maintainability. Include up to three specific examples or suggestions."
-
-STYLES = {
-    "concise": "Provide feedback concisely with bullet points.",
-    "detailed": "Provide detailed, in-depth analysis of the code.",
-    "educational": "Explain the code and its potential issues like teaching a student.",
-}
-
-PERSONAS = {
-    "developer": "Experienced developer offering practical advice.",
-    "educator": "Educator focusing on teaching best practices and principles.",
-}
+REQUEST = """
+Please provide a thorough and detailed review of the following code changes. 
+Focus on identifying any issues with clarity, efficiency, and maintainability. 
+Explain why these issues might be problematic, suggest better coding practices, 
+and provide alternative solutions if applicable. Include specific examples or suggestions wherever possible.
+"""
 
 
-
-def get_prompt(diff, persona, style):
-    style_description = STYLES.get(style, "Detailed analysis")
-    prompt = f"**{persona}: {style_description}**\n\n{REQUEST}\n\n```diff\n{diff}\n```"
-    return prompt
+def get_prompt(diff):
+    return [{
+        "role": "system",
+        "content": REQUEST
+    }, {
+        "role": "user",
+        "content": f"Here are some recent code changes:\n\n```diff\n{diff}\n```"
+    }]
 
 def main():
-    api_key = os.getenv("LLAMA_API_KEY")
-    if not api_key:
-        print("LLAMA_API_KEY is not set.")
-        return
-
-    persona = PERSONAS.get(os.getenv("PERSONA", "developer"))
-    style = STYLES.get(os.getenv("STYLE", "detailed"))
     diff = sys.stdin.read()
-    prompt = get_prompt(diff, persona, style)
+    messages = get_prompt(diff)
 
-    headers = {
-        'Authorization': f'Bearer {api_key}',
-        'Content-Type': 'application/json'
-    }
-    data = {
+    api_request_json = {
         "model": MODEL,
-        "prompt": prompt,
+        "messages": messages,
         "max_tokens": MAX_TOKENS,
-        "temperature": TEMPERATURE
+        "temperature": TEMPERATURE,
+        "top_p": 1,
+        "stream": False
     }
 
     try:
-        response = requests.post('https://api.llama-api.com/v1/completions', json=data, headers=headers)
-        if response.status_code == 200:
+        response = llama.run(api_request_json)
+        if response.ok:
             response_json = response.json()
-            review_text = response_json.get('choices', [{}])[0].get('text', '').strip()
-            with open('review_results.txt', 'w') as file:
-                file.write(review_text)
-            print("Review results written to review_results.txt")
+            print("API Response:", response_json)  # Print the full API response
+            # Adjust how you extract the review text:
+            choices = response_json.get('choices', [])
+            review_texts = [choice.get('message', {}).get('content', '') for choice in choices if choice.get('message')]
+            review_text = ' '.join(review_texts).strip()
+            if review_text:
+                with open('review_results.txt', 'w') as file:
+                    file.write(review_text)
+                print("Review results written to review_results.txt")
+            else:
+                print("No review text was generated.")
         else:
             print(f"API request failed with status code {response.status_code}: {response.text}")
     except Exception as e:
