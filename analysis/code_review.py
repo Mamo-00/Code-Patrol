@@ -14,7 +14,7 @@ def fetch_pr_diff(repo, pr_number, token):
         print(f"Failed to fetch PR diff: {response.status_code} {response.text}")
         return None
 
-REQUEST = "Reply with a detailed review of the provided code changes and give code examples of specific changes. Limit suggestions to 3 high quality examples and focus on improvements for clarity, efficiency, and maintainability."
+REQUEST = "Reply with a detailed review of the provided code changes and give code examples of specific changes. Limit suggestions to 3 high quality examples and focus on improvements for clarity, efficiency, and maintainability. If there are no issues then reply with a confirmation that the there are no issues with the code"
 
 PERSONA = "You are an experienced software developer in a variety of programming languages and methodologies. You create efficient, scalable, and fault-tolerant solutions"
 
