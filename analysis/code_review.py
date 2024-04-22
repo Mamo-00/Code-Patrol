@@ -14,15 +14,19 @@ def fetch_pr_diff(repo, pr_number, token):
         print(f"Failed to fetch PR diff: {response.status_code} {response.text}")
         return None
 
-REQUEST = "Please provide a detailed review of the provided code changes by analysing the diff and focus on improvements for clarity, efficiency, and maintainability."
+REQUEST = "Reply with a detailed review of the provided code changes and give code examples of specific changes. Limit suggestions to 3 high quality examples and focus on improvements for clarity, efficiency, and maintainability."
+
+PERSONA = "You are an experienced software developer in a variety of programming languages and methodologies. You create efficient, scalable, and fault-tolerant solutions"
+
+STYLE = "Format feedback concisely with bullet points"
 
 def get_prompt(diff):
     return [{
         "role": "system",
-        "content": REQUEST
+        "content": "{}. {}. {}".format(PERSONA, STYLE, REQUEST)
     }, {
         "role": "user",
-        "content": f"Here are some recent code changes that I need you to analyse and give me improvements on:\n\n```diff\n{diff}\n```"
+        "content": f"Please provide a detailed review of the provided code changes that I need you to analyse and give me improvements on:\n\n```diff\n{diff}\n```"
     }]
 
 def main():
@@ -47,12 +51,10 @@ def main():
     messages = get_prompt(diff)
 
     api_request_json = {
-        "model": "llama-7b-32k",
+        "model": "codellama-34b-instruct",
         "messages": messages,
         "max_tokens": 7000,
-        "temperature": 0.5,
-        "top_p": 1,
-        "stream": False
+        "temperature": 0.3,
     }
 
     response = llama.run(api_request_json)
